@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Linkedin Authentication Login in Asp.net Website</title>
+ <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true"></script>
+</head>
+<body>
+<form id="form1" runat="server">
+<h2> Using Google API to Locate Places</h2>
+<fieldset>
+          <div>
+            <input id="btn" type="textbox" Placeholder="Search Place"/>
+             <input id="btn" type="button" value="Search Place"/>
+        </fieldset> 
+         <div id="map-canvas" style="height: 400px; width: 900px; margin:90px auto auto auto; padding-top:80px"> </div>   
+    </div>
+
+</form>
+</body>
+
+ <script type="text/javascript">
+      $(document).ready(function () {
+        $("#btn").click(function () {
+         
+          var geocoder = new google.maps.Geocoder();
+          var con = document.getElementById("<%= txtCon.ClientID %>").value;
+          var city = document.getElementById("<%= txtCity.ClientID %>").value;
+
+          //               var con = "Nigeria";
+          //               var city = "Lagos";
+
+          var com = city + "," + con;
+          geocoder.geocode({ 'address': com }, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK) {
+              var x = results[0].geometry.location.lat();
+              var y = results[0].geometry.location.lng();
+              var latlng = new google.maps.LatLng(x, y);
+              var myOptions = {
+                zoom: 8,
+                center: latlng,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+              };
+
+              map = new google.maps.Map(document.getElementById("map-canvas"), myOptions);
+              var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(x, y),
+                map: map,
+                title: com
+              });
+
+              var infowindow = new google.maps.InfoWindow({
+                content: com
+              });
+              infowindow.open(map, marker);
+              google.maps.event.addDomListener(window, 'load');
+            } else {
+              res.innerHTML = "Enter correct Details: " + status;
+            }
+          });
+        });
+      });
+      
+      </script>
+</html>
